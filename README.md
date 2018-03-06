@@ -1,2 +1,1 @@
-# dockerfiles
-Assorted dockerfiles
+Just some docker files for local development.
