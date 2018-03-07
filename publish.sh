@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 for f in */*.Dockerfile; do
   basename=$(basename ${f})
