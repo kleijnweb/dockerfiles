@@ -1,4 +1,4 @@
-FROM php:7.2-cli-stretch
+FROM php:7.2-fpm-stretch
 
 MAINTAINER John Kleijn <john@kleijnweb.nl>
 
@@ -36,6 +36,27 @@ RUN docker-php-ext-install xsl
 RUN apt -y install zlib1g-dev
 RUN docker-php-ext-install zip
 
-RUN wget -qO- https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/sbin
+RUN apt-get update && \
+  apt-get install -y nginx && \
+  sed -i 's/daemonize = no/daemonize = yes/' /usr/local/etc/php-fpm.d/zz-docker.conf
+
+COPY web/php.ini "/usr/local/etc/php/php.ini"
+COPY web/php-fpm-service /etc/init.d/php-fpm
+COPY web/entrypoint.sh /docker-entrypoint
+COPY web/nginx.conf /etc/nginx/nginx.conf
+
+RUN chmod +x /etc/init.d/php-fpm && \
+    update-rc.d php-fpm defaults && \
+    ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stderr /var/log/nginx/error.log && \
+    chmod +x /docker-entrypoint
+
+ENTRYPOINT [ "/bin/sh", "-c" ]
+CMD [ "/docker-entrypoint" ]
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN wget -qO- https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/sbin
+
+EXPOSE 443
+EXPOSE 80

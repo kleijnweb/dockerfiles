@@ -2,7 +2,7 @@ FROM php:7.1-cli-jessie
 
 MAINTAINER John Kleijn <john@kleijnweb.nl>
 
-RUN apt update && apt -y install wget
+RUN apt update && apt -y install wget git
 
 RUN docker-php-ext-install bcmath
 

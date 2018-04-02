@@ -2,7 +2,7 @@ FROM php:7.0-cli-jessie
 
 MAINTAINER John Kleijn <john@kleijnweb.nl>
 
-RUN apt update && apt -y install wget
+RUN apt update && apt -y install wget git
 
 RUN docker-php-ext-install bcmath
 
@@ -26,7 +26,7 @@ RUN docker-php-ext-install soap
 
 RUN docker-php-ext-install sockets
 
-RUN apt -y install libtidy-dev libtidy5
+RUN apt -y install libtidy-dev libtidy-0.99-0
 RUN docker-php-ext-install tidy
 
 RUN apt -y install libxslt1.1 libxslt1-dev
